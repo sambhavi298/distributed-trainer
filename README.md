@@ -82,6 +82,7 @@ distributed-trainer/
 
 ### Single-Worker Training (Baseline)
 
+- `--num_workers` maps directly to `world_size`.
 - Fully supported and validated
 - Used to establish correctness and performance baseline
 - Includes checkpointing and resume
