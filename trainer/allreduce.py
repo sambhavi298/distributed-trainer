@@ -41,7 +41,11 @@ def all_reduce_gradients(model, rank, world_size, tmp_dir="tmp_grads"):
         for name in summed_grads:
             summed_grads[name] /= world_size
 
-        torch.save(summed_grads, os.path.join(tmp_dir, "avg_grads.pt"))
+        tmp_avg_path = os.path.join(tmp_dir, "avg_grads.tmp")
+        final_avg_path = os.path.join(tmp_dir, "avg_grads.pt")
+
+        torch.save(summed_grads, tmp_avg_path)
+        os.replace(tmp_avg_path, final_avg_path)
 
     # 4. Wait for averaged gradients
     avg_path = os.path.join(tmp_dir, "avg_grads.pt")
