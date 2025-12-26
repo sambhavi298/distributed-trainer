@@ -1,5 +1,17 @@
-import argparse
+import torch.multiprocessing as mp
 from trainer.worker import train_worker
+
+
+def run_worker(rank, world_size, args):
+    train_worker(
+        rank=rank,
+        world_size=world_size,
+        epochs=args.epochs,
+        batch_size=args.batch_size,
+        lr=args.lr,
+        checkpoint_dir="checkpoints",
+        device=args.device,
+    )
 
 
 def main():
@@ -13,15 +25,17 @@ def main():
         default="checkpoints/worker.pt",
     )
     parser.add_argument("--device", type=str, default="cpu")
+    parser.add_argument("--num_workers", type=int, default=2)
 
     args = parser.parse_args()
 
-    train_worker(
-        epochs=args.epochs,
-        batch_size=args.batch_size,
-        lr=args.lr,
-        checkpoint_path=args.checkpoint_path,
-        device=args.device,
+    world_size = args.num_workers
+
+    mp.spawn(
+        run_worker,
+        args=(world_size, args),
+        nprocs=world_size,
+        join=True,
     )
 
 
