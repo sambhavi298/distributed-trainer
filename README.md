@@ -201,7 +201,7 @@ These are deliberate design exclusions.
 * [x] Step 1: Project structure and system contracts
 * [x] Step 2: Dataset and model abstraction
 * [x] Step 3: Single-worker training baseline
-* [x] Step 4: Checkpointing and resume
+* [x] Step 4: Multi-process local training, checkpointing and resume
 * [x] Step 5: Distributed training architecture (data parallel + all-reduce)
 
 ---
