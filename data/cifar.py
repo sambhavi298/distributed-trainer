@@ -18,11 +18,12 @@ def get_train_loader(batch_size: int, num_workers: int = 2):
     ])
 
     train_dataset = datasets.CIFAR10(
-        root="./data",
-        train=True,
-        download=True,
-        transform=transform,
+    root="./data",
+    train=True,
+    download=False,   # IMPORTANT
+    transform=transform,
     )
+
 
     train_loader = DataLoader(
         train_dataset,
