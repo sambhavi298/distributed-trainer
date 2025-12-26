@@ -8,13 +8,19 @@ from trainer.checkpoint import save_checkpoint, load_checkpoint
 
 
 def train_worker(
+    rank: int,
+    world_size: int,
     epochs: int,
     batch_size: int,
     lr: float,
-    checkpoint_path: str,
+    checkpoint_dir: str,
     device: str = "cpu",
 ):
     device = torch.device(device)
+    
+    checkpoint_path = f"{checkpoint_dir}/worker_{rank}.pt"
+    
+    print(f"[Worker {rank}/{world_size}] starting")
 
     # Model
     model = get_model()
@@ -50,6 +56,7 @@ def train_worker(
 
             if global_step % 100 == 0:
                 print(
+                    f"[Worker {rank}] "
                     f"Epoch [{epoch}] Step [{global_step}] "
                     f"Loss: {loss.item():.4f}"
                 )
