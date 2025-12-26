@@ -1,6 +1,7 @@
 import os
 import time
 import torch
+from trainer.compression import topk_compress
 
 
 def all_reduce_gradients(model, rank, world_size, tmp_dir="tmp_grads"):
@@ -16,6 +17,14 @@ def all_reduce_gradients(model, rank, world_size, tmp_dir="tmp_grads"):
     for name, param in model.named_parameters():
         if param.grad is not None:
             grads[name] = param.grad.detach().cpu()
+
+    # Compression
+    names = list(grads.keys())
+    tensors = [grads[n] for n in names]
+    compressed = topk_compress(tensors, k_ratio=0.1)
+    
+    for name, tens in zip(names, compressed):
+        grads[name] = tens
 
     torch.save(grads, grad_path)
 
