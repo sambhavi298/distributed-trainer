@@ -18,6 +18,7 @@ def train_worker(
     lr: float,
     checkpoint_dir: str,
     device: str = "cpu",
+    k_ratio: float = 0.1,
 ):
     device = torch.device(device)
     
@@ -60,6 +61,7 @@ def train_worker(
                     rank=rank,
                     world_size=world_size,
                     tmp_dir="tmp_grads",
+                    k_ratio=k_ratio,
                 )
             optimizer.step()
 

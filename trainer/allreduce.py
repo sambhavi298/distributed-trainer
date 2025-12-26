@@ -4,7 +4,7 @@ import torch
 from trainer.compression import topk_compress
 
 
-def all_reduce_gradients(model, rank, world_size, tmp_dir="tmp_grads"):
+def all_reduce_gradients(model, rank, world_size, tmp_dir="tmp_grads", k_ratio=0.1):
     os.makedirs(tmp_dir, exist_ok=True)
 
     step_dir = os.path.join(tmp_dir, "step")
@@ -21,7 +21,7 @@ def all_reduce_gradients(model, rank, world_size, tmp_dir="tmp_grads"):
     # Compression
     names = list(grads.keys())
     tensors = [grads[n] for n in names]
-    compressed = topk_compress(tensors, k_ratio=0.1)
+    compressed = topk_compress(tensors, k_ratio=k_ratio)
     
     for name, tens in zip(names, compressed):
         grads[name] = tens

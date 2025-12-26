@@ -12,6 +12,7 @@ def run_worker(rank, world_size, args):
         lr=args.lr,
         checkpoint_dir="checkpoints",
         device=args.device,
+        k_ratio=args.k_ratio,
     )
 
 
@@ -27,6 +28,7 @@ def main():
     )
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--num_workers", type=int, default=2)
+    parser.add_argument("--k_ratio", type=float, default=0.1)
 
     args = parser.parse_args()
 
