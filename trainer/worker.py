@@ -1,3 +1,5 @@
+import os
+import platform
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -52,12 +54,13 @@ def train_worker(
             loss = criterion(outputs, targets)
             loss.backward()
 
-            all_reduce_gradients(
-                model,
-                rank=rank,
-                world_size=world_size,
-                tmp_dir="tmp_grads",
-            )
+            if platform.system() != "Windows":
+                all_reduce_gradients(
+                    model,
+                    rank=rank,
+                    world_size=world_size,
+                    tmp_dir="tmp_grads",
+                )
             optimizer.step()
 
             global_step += 1
