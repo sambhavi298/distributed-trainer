@@ -47,10 +47,15 @@ def all_reduce_gradients(model, rank, world_size, tmp_dir="tmp_grads"):
         torch.save(summed_grads, tmp_avg_path)
         os.replace(tmp_avg_path, final_avg_path)
 
+        barrier_path = os.path.join(tmp_dir, "BARRIER")
+        with open(barrier_path, "w") as f:
+            f.write("done")
+
     # 4. Wait for averaged gradients
     avg_path = os.path.join(tmp_dir, "avg_grads.pt")
-    while not os.path.exists(avg_path):
-        time.sleep(0.1)
+    barrier_path = os.path.join(tmp_dir, "BARRIER")
+    while not os.path.exists(barrier_path):
+        time.sleep(0.05)
 
     avg_grads = torch.load(avg_path)
 
