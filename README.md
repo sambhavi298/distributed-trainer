@@ -34,7 +34,7 @@ This project is intended as a **systems-level ML engineering project**, not a be
   - Loads the same model architecture
   - Processes a different shard of the dataset
   - Computes local gradients
-- Gradients are synchronized across workers using a custom all-reduce mechanism
+- Gradients are synchronized across workers using a custom all-reduce mechanism (synchronous and blocking)
 - Model weights remain consistent across workers
 
 ### Worker Orchestration
