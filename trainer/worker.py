@@ -5,6 +5,7 @@ import torch.optim as optim
 from models.resnet import get_model
 from data.cifar import get_train_loader
 from trainer.checkpoint import save_checkpoint, load_checkpoint
+from trainer.allreduce import all_reduce_gradients
 
 
 def train_worker(
@@ -50,6 +51,13 @@ def train_worker(
             outputs = model(inputs)
             loss = criterion(outputs, targets)
             loss.backward()
+
+            all_reduce_gradients(
+                model,
+                rank=rank,
+                world_size=world_size,
+                tmp_dir="tmp_grads",
+            )
             optimizer.step()
 
             global_step += 1
