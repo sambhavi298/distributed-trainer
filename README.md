@@ -130,6 +130,20 @@ python -m scripts.launch_local \
 
 ---
 
+## Gradient Compression (Step 6)
+
+To reduce communication overhead, this project implements Top-K gradient
+compression. Before gradient synchronization, only the largest-magnitude
+gradient values are transmitted, while smaller values are zeroed.
+
+This demonstrates how bandwidth–accuracy tradeoffs are handled in real
+distributed training systems.
+
+Compression is configurable via a `k_ratio` parameter and integrates
+cleanly into the existing all-reduce pipeline.
+
+---
+
 ## Platform Note (Important)
 
 ### Windows Limitation
